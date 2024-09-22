@@ -1,4 +1,4 @@
 #syntax=felipecruz/gofile
 repo: github.com/owner/repo
 path: ./cmd/server
-version: v0.0.1
+ref: main

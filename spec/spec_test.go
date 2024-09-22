@@ -9,9 +9,9 @@ import (
 func TestNewGoFile(t *testing.T) {
 	got := NewGofile("./test_data/Gofile.yaml")
 
-	assert.Equal(t, "github.com/owner/repo", got.Repo)
+	assert.Equal(t, "github.com/owner/repo", got.GitRepo)
 	assert.Equal(t, "./cmd/server", got.Path)
-	assert.Equal(t, "v0.0.1", got.Version)
+	assert.Equal(t, "main", got.GitRef)
 }
 
 func TestIsValid(t *testing.T) {
