@@ -2,3 +2,4 @@
 repo: github.com/owner/repo
 path: ./cmd/server
 ref: main
+scratch: true

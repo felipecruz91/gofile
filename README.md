@@ -15,18 +15,27 @@ Create a `Gofile.yaml` file indicating the Git repository, the path, and the Git
 repo: https://github.com/dockersamples/helloworld-go-demo
 path: .
 ref: main
+scratch: true # Use scratch image as base with CA certs, otherwise defaults to alpine
 ```
 
 Build the image:
 
 ```bash
-docker build -t go-app -f Gofile.yaml .
+docker build -t felipecruz/gofile-demo -f Gofile.yaml .
+```
+
+Check the image size:
+
+```bash
+docker image ls felipecruz/gofile-demo
+REPOSITORY               TAG       IMAGE ID       CREATED          SIZE
+felipecruz/gofile-demo   latest    fe66d2c25ca2   14 minutes ago   7.33MB
 ```
 
 Run the container:
 
 ```bash
-docker run --rm -p 8080:8080 go-app /bin/server
+docker run --rm -p 8080:8080 felipecruz/gofile-demo /bin/server
 ```
 
 Make a request:

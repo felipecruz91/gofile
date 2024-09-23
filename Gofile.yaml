@@ -2,3 +2,4 @@
 repo: https://github.com/dockersamples/helloworld-go-demo
 path: .
 ref: main
+scratch: true # Use scratch image as base with CA certs
