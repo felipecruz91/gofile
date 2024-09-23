@@ -12,6 +12,7 @@ func TestNewGoFile(t *testing.T) {
 	assert.Equal(t, "github.com/owner/repo", got.GitRepo)
 	assert.Equal(t, "./cmd/server", got.Path)
 	assert.Equal(t, "main", got.GitRef)
+	assert.True(t, got.Scratch)
 }
 
 func TestIsValid(t *testing.T) {

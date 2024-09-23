@@ -1,4 +1,5 @@
-#syntax=felipecruz/gofile:scratch
+#syntax=felipecruz/gofile
 repo: https://github.com/dockersamples/helloworld-go-demo
 path: .
 ref: main
+scratch: true # Use scratch image as base with CA certs

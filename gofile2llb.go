@@ -1,6 +1,8 @@
 package gofile
 
 import (
+	"fmt"
+
 	"github.com/felipecruz91/gofile/spec"
 	"github.com/moby/buildkit/client/llb"
 	"github.com/moby/buildkit/util/system"
@@ -35,10 +37,25 @@ func goRepo(s llb.State, repo, ref string, g ...llb.GitOption) func(ro ...llb.Ru
 func buildkit(c *spec.Gofile) llb.State {
 	builder := goRepo(goBuildBase(), c.GitRepo, c.GitRef)
 	built := builder(llb.Shlex(`go build -trimpath -ldflags="-s -w" -o ./bin/server ` + c.Path))
-	r := llb.Scratch().With(
+	st := llb.Scratch().With(
 		copyAll(built, "/bin"),
 	)
-	return r
+
+	if c.Scratch {
+		// Use scratch as the base image with CA certs
+		const certPath = "/etc/ssl/certs"
+		st = st.File(
+			llb.Copy(llb.Image("docker.io/library/alpine:latest"), fmt.Sprintf("%s/%s", certPath, "ca-certificates.crt"), certPath, &llb.CopyInfo{
+				FollowSymlinks:      true,
+				CopyDirContentsOnly: true,
+				AttemptUnpack:       false,
+				CreateDestPath:      true,
+				AllowWildcard:       true,
+				AllowEmptyWildcard:  true,
+			}), llb.WithCustomNamef("[internal] copying CA certificates to %s", certPath))
+	}
+
+	return st
 }
 
 func copyAll(src llb.State, destPath string) llb.StateOption {

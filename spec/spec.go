@@ -12,6 +12,7 @@ type Gofile struct {
 	GitRepo string `yaml:"repo"`
 	GitRef  string `yaml:"ref"`
 	Path    string `yaml:"path"`
+	Scratch bool   `yaml:"scratch"`
 }
 
 func NewGofile(filename string) *Gofile {
