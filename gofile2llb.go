@@ -35,7 +35,7 @@ func goRepo(s llb.State, repo, ref string, g ...llb.GitOption) func(ro ...llb.Ru
 func buildkit(c *spec.Gofile) llb.State {
 	builder := goRepo(goBuildBase(), c.GitRepo, c.GitRef)
 	built := builder(llb.Shlex(`go build -trimpath -ldflags="-s -w" -o ./bin/server ` + c.Path))
-	r := llb.Image("docker.io/library/alpine:latest").With(
+	r := llb.Scratch().With(
 		copyAll(built, "/bin"),
 	)
 	return r

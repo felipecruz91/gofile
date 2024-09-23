@@ -1,4 +1,4 @@
-#syntax=felipecruz/gofile
+#syntax=felipecruz/gofile:scratch
 repo: https://github.com/dockersamples/helloworld-go-demo
 path: .
 ref: main
