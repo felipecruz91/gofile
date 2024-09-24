@@ -3,6 +3,7 @@ package gofile
 import (
 	"fmt"
 
+	"github.com/felipecruz91/gofile/internal/utils"
 	"github.com/felipecruz91/gofile/spec"
 	"github.com/moby/buildkit/client/llb"
 	"github.com/moby/buildkit/util/system"
@@ -29,14 +30,22 @@ func goRepo(s llb.State, repo, ref string, g ...llb.GitOption) func(ro ...llb.Ru
 	dir := "/go/src/" + repo
 	return func(ro ...llb.RunOption) llb.State {
 		es := s.Dir(dir).Run(ro...)
-		es.AddMount(dir, llb.Git(repo, ref, g...))
+		if repo != "" {
+			es.AddMount(dir, llb.Git(repo, ref, g...))
+		} else {
+			es.AddMount(dir, llb.Local(
+				"context",
+				llb.WithCustomName("loading ."),
+				llb.FollowPaths([]string{"."}),
+			))
+		}
 		return es.AddMount(dir+"/bin", llb.Scratch())
 	}
 }
 
 func buildkit(c *spec.Gofile) llb.State {
 	builder := goRepo(goBuildBase(), c.GitRepo, c.GitRef)
-	built := builder(llb.Shlex(`go build -trimpath -ldflags="-s -w" -o ./bin/server ` + c.Path))
+	built := builder(llb.Shlex(fmt.Sprintf(`go build -C %s -trimpath -ldflags="-s -w" -o %s`, c.Path, utils.ConstructPath(c.Path))))
 	st := llb.Scratch().With(
 		copyAll(built, "/bin"),
 	)

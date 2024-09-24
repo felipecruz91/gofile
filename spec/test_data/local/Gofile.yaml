@@ -1,0 +1,3 @@
+#syntax=felipecruz/gofile
+path: ./cmd/server
+scratch: true

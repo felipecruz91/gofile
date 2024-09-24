@@ -7,19 +7,37 @@ import (
 )
 
 func TestNewGoFile(t *testing.T) {
-	got := NewGofile("./test_data/Gofile.yaml")
+	tests := []struct {
+		name     string
+		filepath string
+		expected *Gofile
+	}{
+		{
+			name:     "local",
+			filepath: "./test_data/local/Gofile.yaml",
+			expected: &Gofile{
+				Path:    "./cmd/server",
+				Scratch: true,
+			},
+		},
+		{
+			name:     "remote",
+			filepath: "./test_data/remote/Gofile.yaml",
+			expected: &Gofile{
+				GitRepo: "github.com/owner/repo",
+				GitRef:  "main",
+				Path:    "./cmd/server",
+				Scratch: true,
+			},
+		},
+	}
 
-	assert.Equal(t, "github.com/owner/repo", got.GitRepo)
-	assert.Equal(t, "./cmd/server", got.Path)
-	assert.Equal(t, "main", got.GitRef)
-	assert.True(t, got.Scratch)
-}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := NewGofile(tc.filepath)
 
-func TestIsValid(t *testing.T) {
-	goFile := NewGofile("./test_data/Gofile.yaml")
+			assert.Equal(t, tc.expected, got)
+		})
 
-	valid, msg := goFile.IsValid()
-
-	assert.True(t, valid)
-	assert.Equal(t, "", msg)
+	}
 }

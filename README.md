@@ -18,6 +18,13 @@ ref: main
 scratch: true # Use scratch image as base with CA certs, otherwise defaults to alpine
 ```
 
+Or to build a Go binary from a local directory:
+
+```yaml
+path: ./example/demo
+scratch: true
+```
+
 Build the image:
 
 ```bash
