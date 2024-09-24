@@ -9,8 +9,8 @@ import (
 
 // Gofile defines the Gofile YAML representation
 type Gofile struct {
-	GitRepo string `yaml:"repo"`
-	GitRef  string `yaml:"ref"`
+	GitRepo string `yaml:"repo,omitempty"`
+	GitRef  string `yaml:"ref,omitempty"`
 	Path    string `yaml:"path"`
 	Scratch bool   `yaml:"scratch"`
 }
@@ -36,9 +36,6 @@ func NewGofile(filename string) *Gofile {
 }
 
 func (gf *Gofile) IsValid() (bool, string) {
-	if gf.GitRepo == "" {
-		return false, "repo field is required"
-	}
 	if gf.Path == "" {
 		return false, "path field is required"
 	}

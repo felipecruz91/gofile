@@ -29,7 +29,15 @@ func goRepo(s llb.State, repo, ref string, g ...llb.GitOption) func(ro ...llb.Ru
 	dir := "/go/src/" + repo
 	return func(ro ...llb.RunOption) llb.State {
 		es := s.Dir(dir).Run(ro...)
-		es.AddMount(dir, llb.Git(repo, ref, g...))
+		if repo != "" {
+			es.AddMount(dir, llb.Git(repo, ref, g...))
+		} else {
+			es.AddMount(dir, llb.Local(
+				"context",
+				llb.WithCustomName("loading ."),
+				llb.FollowPaths([]string{"."}),
+			))
+		}
 		return es.AddMount(dir+"/bin", llb.Scratch())
 	}
 }
